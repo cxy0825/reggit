@@ -7,5 +7,5 @@ import com.cxy.reggit.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeImpl extends ServiceImpl<EmployeeMapper, Employee>
+public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee>
     implements EmployeeService {}
