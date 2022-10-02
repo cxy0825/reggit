@@ -1,5 +1,8 @@
 package com.cxy.reggit.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -24,14 +27,31 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
    *
    * @param: converters
    */
+  //  @Override
+  //  protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+  //    // 创建消息转换器
+  //    MappingJackson2HttpMessageConverter messageConverter =
+  //        new MappingJackson2HttpMessageConverter();
+  //    // 设置对象转换器，使用jackson将java对象转换成json
+  //    messageConverter.setObjectMapper(new JacksonObjectMapper());
+  //    // 把上面的消息转换器对象最佳到mvc框架的转换器中
+  //    converters.add(0, messageConverter);
+  //  }
+
+  //  拓展mvc框架的消息转换器
   @Override
-  protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-    // 创建消息转换器
-    MappingJackson2HttpMessageConverter messageConverter =
+  public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    MappingJackson2HttpMessageConverter jackson2HttpMessageConverter =
         new MappingJackson2HttpMessageConverter();
-    // 设置对象转换器，使用jackson将java对象转换成json
-    messageConverter.setObjectMapper(new JacksonObjectMapper());
-    // 把上面的消息转换器对象最佳到mvc框架的转换器中
-    converters.add(0, messageConverter);
+    ObjectMapper objectMapper = new ObjectMapper();
+    SimpleModule simpleModule = new SimpleModule();
+    // 把Long类型转成string字符串
+    simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+    simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+    objectMapper.registerModule(simpleModule);
+    jackson2HttpMessageConverter.setObjectMapper(objectMapper);
+    // 坑2
+    // converters.add(jackson2HttpMessageConverter);
+    converters.add(0, jackson2HttpMessageConverter);
   }
 }

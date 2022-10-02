@@ -1,6 +1,7 @@
 package com.cxy.reggit.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.cxy.reggit.common.BaseContext;
 import com.cxy.reggit.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -38,7 +39,9 @@ public class LoginCheckFilter implements Filter {
       return;
     }
     // 已经登录过了就放行
-    if (request.getSession().getAttribute("employee") != null) {
+    Long userId = (Long) request.getSession().getAttribute("employee");
+    if (userId != null) {
+      BaseContext.setCurrentId(userId);
       filterChain.doFilter(request, response);
       return;
     }

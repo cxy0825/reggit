@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -70,10 +69,10 @@ public class EmployeeController {
     // 初始密码
     employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes(StandardCharsets.UTF_8)));
     //
-    employee.setCreateTime(LocalDateTime.now());
-    employee.setUpdateTime(LocalDateTime.now());
-    employee.setCreateUser((Long) request.getSession().getAttribute("employee"));
-    employee.setUpdateUser((Long) request.getSession().getAttribute("employee"));
+    //    employee.setCreateTime(LocalDateTime.now());
+    //    employee.setUpdateTime(LocalDateTime.now());
+    //    employee.setCreateUser((Long) request.getSession().getAttribute("employee"));
+    //    employee.setUpdateUser((Long) request.getSession().getAttribute("employee"));
     // 添加到数据库
     employeeService.save(employee);
     return R.success("新增员工成功");
@@ -90,7 +89,7 @@ public class EmployeeController {
   @GetMapping("/page")
   public R<Object> page(
       @RequestParam("page") int page, @RequestParam("pageSize") int pageSize, String name) {
-    log.info("{},{},{}", page, pageSize, name);
+    //    log.info("{},{},{}", page, pageSize, name);
     Page<Employee> pageInfo = new Page<>(page, pageSize);
     LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<Employee>();
 
@@ -108,10 +107,20 @@ public class EmployeeController {
    */
   @PutMapping
   public R<String> update(HttpServletRequest request, @RequestBody Employee employee) {
-    Long employeeId = (Long) request.getSession().getAttribute("employee");
-    employee.setUpdateTime(LocalDateTime.now());
-    employee.setUpdateUser(employeeId);
+    log.info(employee.toString());
+    //    Long employeeId = (Long) request.getSession().getAttribute("employee");
+    //    employee.setUpdateTime(LocalDateTime.now());
+    //    employee.setUpdateUser(employeeId);
     employeeService.updateById(employee);
     return R.success("员工信息修改成功");
+  }
+
+  @GetMapping("/{id}")
+  public R<Employee> getById(@PathVariable("id") Long id) {
+    Employee employee = employeeService.getById(id);
+    if (employee != null) {
+      return R.success(employee);
+    }
+    return R.error("没有找到员工信息");
   }
 }
