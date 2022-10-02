@@ -1,6 +1,7 @@
 package com.cxy.reggit.controller;
 
 import com.cxy.reggit.common.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/common")
+@Slf4j
 public class CommonController {
   @Value("${reggie.path}")
   private String basePath;
@@ -31,8 +33,13 @@ public class CommonController {
       // 不存在目录就创建
       dir.mkdirs();
     }
+    log.info(basePath);
+    log.info(fileName);
+    log.info(suffix);
+    log.info(basePath + fileName + suffix);
     // 将临时文件转存到D盘
     file.transferTo(new File(basePath + fileName + suffix));
+
     return R.success(fileName + suffix);
   }
 
@@ -50,6 +57,8 @@ public class CommonController {
         outputStream.write(bytes, 0, len);
         outputStream.flush();
       }
+      outputStream.close();
+      fileInputStream.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
