@@ -2,6 +2,7 @@ package com.cxy.reggit.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 /** 菜品 */
 @Data
+@JsonIgnoreProperties
 public class Dish implements Serializable {
 
   private static final long serialVersionUID = 1L;

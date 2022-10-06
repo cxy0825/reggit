@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cxy.reggit.mapper.DishMapper">
+
+    <select id="selectDishWithCategoryName" resultType="com.cxy.reggit.dto.DishDto">
+        select dish.*, category.name as categoryName
+        from dish,
+        category
+        where dish.category_id = category.id
+        <if test="typeName != null">
+            <!--使用concat函数连接-->
+            and dish.name like concat("%",#{typeName},"%")
+            <!--使用${}拼接字符串，#{}会自动加上双引号变成字符串-->
+            <!--and dish.name like '%${typeName}%'-->
+        </if>
+    </select>
+    <!--查询菜品信息和查询菜品喜欢的口味，其中菜品喜欢的口味要求以list形式保存在dishDto中-->
+    <resultMap id="DishDtoResultMapper" type="com.cxy.reggit.dto.DishDto" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="flavors" ofType="com.cxy.reggit.entity.DishFlavor" autoMapping="true">
+            <result property="value" column="value1"/>
+            <result property="name" column="df_name"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectByIdWithFlavor" resultType="com.cxy.reggit.dto.DishDto" resultMap="DishDtoResultMapper">
+        select dish.*,
+               dish_flavor.value as value1,
+               dish_flavor.name  as df_name
+        from dish,
+             dish_flavor
+        where dish.id = #{id}
+          and dish_flavor.dish_id = #{id}
+    </select>
+</mapper>

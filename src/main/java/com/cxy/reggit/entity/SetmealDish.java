@@ -3,42 +3,37 @@ package com.cxy.reggit.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/** 套餐 */
+/** 套餐菜品关系 */
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Setmeal implements Serializable {
+public class SetmealDish implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   private Long id;
 
-  // 分类id
-  private Long categoryId;
+  // 套餐id
+  private Long setmealId;
 
-  // 套餐名称
+  // 菜品id
+  private Long dishId;
+
+  // 菜品名称 （冗余字段）
   private String name;
 
-  // 套餐价格
+  // 菜品原价
   private BigDecimal price;
 
-  // 状态 0:停用 1:启用
-  private Integer status;
+  // 份数
+  private Integer copies;
 
-  // 编码
-  private String code;
-
-  // 描述信息
-  private String description;
-
-  // 图片
-  private String image;
+  // 排序
+  private Integer sort;
 
   @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
