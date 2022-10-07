@@ -31,7 +31,14 @@ public class LoginCheckFilter implements Filter {
     log.info("拦截请求：{}", request.getRequestURI());
     // 不被拦截的请求列表
     String[] urls =
-        new String[] {"/employee/login", "/employee/logout", "/backend/**", "/front/**"};
+        new String[] {
+          "/employee/login",
+          "/employee/logout",
+          "/backend/**",
+          "/front/**",
+          "/user/sendMsg",
+          "/user/login"
+        };
     boolean check = check(urls, requestURL);
     // 如果本次请求不需要处理就返回
     if (check) {
@@ -40,11 +47,13 @@ public class LoginCheckFilter implements Filter {
     }
     // 已经登录过了就放行
     Long userId = (Long) request.getSession().getAttribute("employee");
-    if (userId != null) {
+    Long userId2 = (Long) request.getSession().getAttribute("user");
+    if (userId != null || userId2 != null) {
       BaseContext.setCurrentId(userId);
       filterChain.doFilter(request, response);
       return;
     }
+
     // 跳转到登录页面
     response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
   }
